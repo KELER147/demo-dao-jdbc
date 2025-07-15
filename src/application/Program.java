@@ -1,5 +1,7 @@
 package application;
 import model.entities.Department;
+import model.entities.Seller;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
