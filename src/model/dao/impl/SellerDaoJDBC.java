@@ -14,33 +14,26 @@ public class SellerDaoJDBC implements SellerDao {
     //Attributes
         private Connection conn;
 
-
     //Constructors
         public SellerDaoJDBC(Connection conn) {
             this.conn = conn;
         }
 
-
     //Methods
-        //->Insert
         @Override
         public void insert(Seller obj) {
 
         }
 
-        //->Update
         @Override
         public void update(Seller obj) {
 
         }
-
-        //->DeleteById
         @Override
         public void deleteById(Integer id) {
 
         }
 
-        //->FindById
         @Override
         public Seller findById(Integer id) {
             PreparedStatement st = null;
@@ -56,21 +49,11 @@ public class SellerDaoJDBC implements SellerDao {
                 rs = st.executeQuery();
                 if (rs.next()) {
 
-                    Department dep = new Department();
-                    dep.setId(rs.getInt("DepartmentId"));
-                    dep.setName(rs.getString("DepName"));
+                    Department dep = instantiateDepartment(rs);
 
-                    Seller seller = new Seller();
-                    seller.setId(rs.getInt("Id"));
-                    seller.setName(rs.getString("Name"));
-                    seller.setEmail(rs.getString("Email"));
-                    seller.setBirthDate(rs.getDate("BirthDate"));
-                    seller.setBaseSalary(rs.getDouble("BaseSalary"));
-                    seller.setDepartment(dep);
-                    return seller;
+                    return instantiateSeller(rs, dep);
                 }
                 return  null;
-
             } catch (SQLException e) {
                 throw new DbException(e.getMessage());
             } finally {
@@ -79,9 +62,29 @@ public class SellerDaoJDBC implements SellerDao {
             }
         }
 
-        //->FindALl
+
         @Override
         public List<Seller> findAll() {
             return List.of();
+        }
+
+    //Methods auxiliaries
+        private Department instantiateDepartment(ResultSet rs) throws SQLException {
+            Department dep = new Department();
+            dep.setId(rs.getInt("DepartmentId"));
+            dep.setName(rs.getString("DepName"));
+            return dep;
+        }
+
+        //-->InstantiateSeller
+        private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+            Seller seller = new Seller();
+            seller.setId(rs.getInt("Id"));
+            seller.setName(rs.getString("Name"));
+            seller.setEmail(rs.getString("Email"));
+            seller.setBirthDate(rs.getDate("BirthDate"));
+            seller.setBaseSalary(rs.getDouble("BaseSalary"));
+            seller.setDepartment(dep);
+            return seller;
         }
 }
