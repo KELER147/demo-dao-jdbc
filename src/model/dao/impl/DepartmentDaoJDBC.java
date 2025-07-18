@@ -1,7 +1,10 @@
 package model.dao.impl;
+import db.DB;
+import db.DbException;
 import model.dao.DepartmentDao;
 import model.entities.Department;
-import java.sql.Connection;
+
+import java.sql.*;
 import java.util.List;
 
 
@@ -16,27 +19,83 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     //Methods
         @Override
-        public void deleteById(Integer id) {
-
-        }
-
-        @Override
-        public List<Department> findAll() {
-            return List.of();
-        }
-
-        @Override
         public void insert(Department obj) {
+            PreparedStatement st = null;
+            ResultSet rs = null;
+            try {
+                Department dep = findByName(obj.getName());
+                if (dep != null) {
+                    System.out.println("Error! Department Existent");
+                } else {
+                    st = conn.prepareStatement(
+                            "INSERT INTO department "
+                            + "(Name) "
+                            + "VALUES "
+                            + "(?)",
+                            Statement.RETURN_GENERATED_KEYS);
 
-        }
+                    st.setString(1, obj.getName());
 
-        @Override
-        public Department findById(Integer id) {
-            return null;
+                    int rowsAffected = st.executeUpdate();
+                    if (rowsAffected > 0) {
+                        rs = st.getGeneratedKeys();
+                        if (rs.next()) {
+                            obj.setId(rs.getInt(1));
+                        } else {
+                            throw new DbException("Unexpected error! No rows affected!");
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DbException(e.getMessage());
+            } finally {
+                DB.closeStatement(st);
+                DB.closeResultSet(rs);
+            }
+
         }
 
         @Override
         public void update(Department obj) {
 
+        }
+
+        @Override
+        public void deleteById(Integer id) {
+
+        }
+
+        @Override
+        public Department findById(Integer id) {
+        return null;
+        }
+
+        @Override
+        public Department findByName(String name) {
+            PreparedStatement st = null;
+            ResultSet rs = null;
+            try {
+                st = conn.prepareStatement("SELECT * FROM department WHERE Name = ?");
+                st.setString(1, name);
+                rs = st.executeQuery();
+                if (rs.next()) {
+                    Department dep = new Department();
+                    dep.setId(rs.getInt("Id"));
+                    dep.setName(rs.getString("Name"));
+                    return dep;
+                } else {
+                    return null;
+                }
+            } catch (SQLException e) {
+                throw new DbException(e.getMessage());
+            } finally {
+                DB.closeStatement(st);
+                DB.closeResultSet(rs);
+            }
+        }
+
+        @Override
+        public List<Department> findAll() {
+            return List.of();
         }
 }

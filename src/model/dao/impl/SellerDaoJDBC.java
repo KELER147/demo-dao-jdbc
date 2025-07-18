@@ -28,7 +28,7 @@ public class SellerDaoJDBC implements SellerDao {
             Seller sll =   findByEmail(obj.getEmail());
             try {
                 if (sll != null) {
-                    System.out.println("Error! Seller Existente");
+                    System.out.println("Error! Seller Existent");
                 } else {
                     st = conn.prepareStatement(
                             "INSERT INTO seller "
