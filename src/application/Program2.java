@@ -2,7 +2,6 @@ package application;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
-
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -26,16 +25,18 @@ public class Program2 {
         System.out.println("\n=== TEST 3: findAll =======");
 
 
+
         System.out.println("\n=== TEST 4: insert =======");
         dep =  new Department(null, "Production");
         departmentDao.insert(dep);
         if (dep.getId() != null) {System.out.println("Inserted! New id: " + dep.getId());}
 
 
-        System.out.println("\n=== TEST 5: delete =======");
-
-
-
+        System.out.println("\n=== TEST 5: deleteById =======");
+        System.out.println("Enter id for delete test: ");
+        int id = sc.nextInt();
+        departmentDao.deleteById(id);
+        System.out.println("Delete completed");
 
         sc.close();
     }
