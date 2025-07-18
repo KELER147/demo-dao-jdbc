@@ -33,9 +33,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
                             + "VALUES "
                             + "(?)",
                             Statement.RETURN_GENERATED_KEYS);
-
                     st.setString(1, obj.getName());
-
                     int rowsAffected = st.executeUpdate();
                     if (rowsAffected > 0) {
                         rs = st.getGeneratedKeys();
@@ -67,7 +65,27 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
         @Override
         public Department findById(Integer id) {
-        return null;
+            PreparedStatement st = null;
+            ResultSet rs = null;
+            try {
+                st = conn.prepareStatement("SELECT * FROM department WHERE Id = ?");
+                st.setInt(1, id);
+                rs = st.executeQuery();
+                if (rs.next()) {
+                    Department dep = new Department();
+                    dep.setId(rs.getInt("Id"));
+                    dep.setName(rs.getString("Name"));
+                    return dep;
+                } else {
+                    System.out.println("Error! Department with name " + id + " not found!");
+                    return null;
+                }
+            } catch (SQLException e) {
+                throw new DbException(e.getMessage());
+            } finally {
+                DB.closeStatement(st);
+                DB.closeResultSet(rs);
+            }
         }
 
         @Override
@@ -84,6 +102,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
                     dep.setName(rs.getString("Name"));
                     return dep;
                 } else {
+                    System.out.println("Error! Department with name " + name + " not found!");
                     return null;
                 }
             } catch (SQLException e) {

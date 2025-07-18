@@ -13,12 +13,21 @@ public class Program2 {
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 
 
-        System.out.println("=== TEST 1: findById =======");
+        System.out.println("\n=== TEST 1: findById =======");
+        Department dep = departmentDao.findById(2);
+        System.out.println(dep);
 
-        System.out.println("\n=== TEST 2: findAll =======");
 
-        System.out.println("\n=== TEST 3: insert =======");
-        Department dep =  new Department(null, "Production");
+        System.out.println("\n=== TEST 2: findByName =======");
+        dep = departmentDao.findByName("admin");
+        System.out.println(dep);
+
+
+        System.out.println("\n=== TEST 3: findAll =======");
+
+
+        System.out.println("\n=== TEST 4: insert =======");
+        dep =  new Department(null, "Production");
         departmentDao.insert(dep);
         if (dep.getId() != null) {System.out.println("Inserted! New id: " + dep.getId());}
 
