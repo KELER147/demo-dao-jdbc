@@ -40,7 +40,6 @@ public class Program {
             System.out.println("Inserted! New id: " + newSeller.getId());
         }
 
-
         System.out.println("\n=== Test 6: seller Update ===");
         seller = sellerDao.findById(1);
         seller.setName("Martha  Waine");
