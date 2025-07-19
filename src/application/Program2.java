@@ -2,6 +2,8 @@ package application;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
+
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -23,7 +25,8 @@ public class Program2 {
 
 
         System.out.println("\n=== TEST 3: findAll =======");
-
+        List<Department> list = departmentDao.findAll();
+        list.forEach(System.out::println);
 
 
         System.out.println("\n=== TEST 4: insert =======");
@@ -36,7 +39,12 @@ public class Program2 {
         System.out.println("Enter id for delete test: ");
         int id = sc.nextInt();
         departmentDao.deleteById(id);
-        System.out.println("Delete completed");
+
+        System.out.println("\n=== TEST 6: Update =======");
+        Department dep2 = departmentDao.findById(5);
+        dep2.setName("ADM");
+        departmentDao.update(dep2);
+
 
         sc.close();
     }
